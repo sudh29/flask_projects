@@ -2,8 +2,16 @@
 
 import os
 from flask import Flask
-from extensions import db
-from config import config
+try:
+    from .extensions import db
+    from .config import config
+except (ImportError, ValueError):
+    try:
+        from app6.extensions import db
+        from app6.config import config
+    except (ImportError, ValueError):
+        from extensions import db
+        from config import config
 
 
 def create_app(config_name=None):
@@ -30,7 +38,13 @@ def create_app(config_name=None):
     db.init_app(app)
 
     # Register blueprints
-    from routes import tasks_bp
+    try:
+        from .routes import tasks_bp
+    except (ImportError, ValueError):
+        try:
+            from app6.routes import tasks_bp
+        except (ImportError, ValueError):
+            from routes import tasks_bp
 
     app.register_blueprint(tasks_bp)
 

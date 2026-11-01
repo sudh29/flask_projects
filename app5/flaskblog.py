@@ -1,8 +1,16 @@
 from flask import Flask, render_template, url_for, flash, redirect, request
 from flask_bcrypt import Bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
-from forms import RegistrationForm, LoginForm
-from models import db, login_manager, User, Post
+try:
+    from .forms import RegistrationForm, LoginForm
+    from .models import db, login_manager, User, Post
+except (ImportError, ValueError):
+    try:
+        from app5.forms import RegistrationForm, LoginForm
+        from app5.models import db, login_manager, User, Post
+    except (ImportError, ValueError):
+        from forms import RegistrationForm, LoginForm
+        from models import db, login_manager, User, Post
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "5791628bb0b13ce0c676dfde280ba245"

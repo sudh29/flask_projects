@@ -1,3 +1,4 @@
+import os
 from apispec import APISpec
 from apispec.ext.marshmallow import MarshmallowPlugin
 from apispec_webframeworks.flask import FlaskPlugin
@@ -12,7 +13,12 @@ from flask import (
 from flask_cors import CORS
 from marshmallow import Schema, fields
 
-app = Flask(__name__, template_folder="templates", static_folder="static")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+app = Flask(
+    __name__,
+    template_folder=os.path.join(BASE_DIR, "templates"),
+    static_folder=os.path.join(BASE_DIR, "static"),
+)
 CORS(app)  # Enable CORS for API endpoints
 
 
@@ -131,11 +137,13 @@ def swagger_docs(path=None):
     """Swagger documentation endpoint"""
     if not path or path == "index.html":
         # Render Swagger UI template with proper base_url
-        with open("Swagger/template/index.html", "r", encoding="utf-8") as f:
+        template_path = os.path.join(BASE_DIR, "Swagger", "template", "index.html")
+        with open(template_path, "r", encoding="utf-8") as f:
             template_content = f.read()
         return render_template_string(template_content, base_url="/docs")
     else:
-        return send_from_directory("./Swagger/static", path)
+        static_dir = os.path.join(BASE_DIR, "Swagger", "static")
+        return send_from_directory(static_dir, path)
 
 
 if __name__ == "__main__":

@@ -1,9 +1,19 @@
 """Application routes using Blueprint."""
 
 from flask import Blueprint, render_template, redirect, url_for, flash
-from extensions import db
-from models import Task
-from forms import TaskForm, DeleteTaskForm
+try:
+    from .extensions import db
+    from .models import Task
+    from .forms import TaskForm, DeleteTaskForm
+except (ImportError, ValueError):
+    try:
+        from app6.extensions import db
+        from app6.models import Task
+        from app6.forms import TaskForm, DeleteTaskForm
+    except (ImportError, ValueError):
+        from extensions import db
+        from models import Task
+        from forms import TaskForm, DeleteTaskForm
 
 # Create blueprint
 tasks_bp = Blueprint("tasks", __name__)
@@ -75,4 +85,4 @@ def delete(task_id):
             db.session.rollback()
             flash(f"Error deleting task: {str(e)}", "error")
 
-    return render_template("delete.html", form=form, task=task)
+    return render_template("delete.html", form=form, task=task, task_id=task_id)

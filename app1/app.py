@@ -1,6 +1,8 @@
+import os
 from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
@@ -33,7 +35,7 @@ def success_response(data, status_code=200):
 @app.route("/")
 def home():
     """Serve the interactive testing page."""
-    return send_file("index.html")
+    return send_file(os.path.join(BASE_DIR, "index.html"))
 
 
 @app.route("/api")
